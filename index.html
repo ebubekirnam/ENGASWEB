@@ -45,7 +45,7 @@
             font-family: "Montserrat", sans-serif;
         }
 
-        /* Arka Plan Animasyonu (Nokta-Çizgi Ağı) */
+        /* Arka Plan Animasyonu */
         #energy-canvas {
             position: fixed;
             top: 0;
@@ -122,7 +122,6 @@
             gap: 16px;
         }
 
-            /* LOGO BOYUTU */
             .logo-wrap img {
                 height: 86px;
                 width: auto;
@@ -362,7 +361,6 @@
             color: #fff;
         }
 
-        /* --- MAVİDEN SARIYA AKAN ANİMASYONLU YAZI --- */
         .hero-highlight {
             background: linear-gradient(90deg, #60a5fa, #3b82f6, #f8b400);
             background-size: 200% auto;
@@ -801,6 +799,23 @@
             min-height: 100px;
         }
 
+        #form-status {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+        }
+
+            #form-status.success {
+                color: #4ade80;
+                display: block;
+            }
+
+            #form-status.error {
+                color: #ef4444;
+                display: block;
+            }
+
         .map-container {
             grid-column: 1 / -1;
             height: 350px;
@@ -1166,7 +1181,7 @@
 
                 <div class="contact-form-side reveal delay-2">
                     <h3 style="color:#fff; margin-bottom:20px;">Mesaj Gönderin</h3>
-                    <form action="https://formspree.io/f/xldkgypw" method="POST">
+                    <form id="contact-form" action="https://formspree.io/f/xldkgypw" method="POST">
                         <div class="form-group">
                             <label class="form-label">Ad Soyad</label>
                             <input type="text" name="name" class="form-input" required>
@@ -1183,7 +1198,8 @@
                             <label class="form-label">Mesajınız</label>
                             <textarea name="message" class="form-input" rows="4" required></textarea>
                         </div>
-                        <button type="submit" class="btn-submit">GÖNDER</button>
+                        <button type="submit" class="btn-submit" id="submit-btn">GÖNDER</button>
+                        <div id="form-status"></div>
                     </form>
                 </div>
 
@@ -1325,6 +1341,48 @@
                 if (e.key === 'ArrowLeft') track.scrollBy({ left: -340, behavior: 'smooth' });
             });
         });
+
+        // --- AJAX FORM GÖNDERİMİ (SAYFA YENİLENMEDEN) ---
+        const form = document.getElementById("contact-form");
+        const btn = document.getElementById("submit-btn");
+        const status = document.getElementById("form-status");
+
+        async function handleSubmit(event) {
+            event.preventDefault();
+            btn.disabled = true;
+            btn.innerText = "Gönderiliyor...";
+            const data = new FormData(event.target);
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    status.innerHTML = "✅ Mesajınız başarıyla iletildi!";
+                    status.className = "success";
+                    form.reset();
+                    btn.innerText = "GÖNDER";
+                    btn.disabled = false;
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
+                        } else {
+                            status.innerHTML = "❌ Bir hata oluştu, lütfen tekrar deneyin."
+                        }
+                        status.className = "error";
+                        btn.disabled = false;
+                        btn.innerText = "GÖNDER";
+                    })
+                }
+            }).catch(error => {
+                status.innerHTML = "❌ Sunucu hatası, lütfen daha sonra tekrar deneyin.";
+                status.className = "error";
+                btn.disabled = false;
+                btn.innerText = "GÖNDER";
+            });
+        }
+        form.addEventListener("submit", handleSubmit);
     </script>
 </body>
 </html>
