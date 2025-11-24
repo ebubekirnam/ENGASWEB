@@ -227,36 +227,71 @@
                 background: rgba(11, 103, 194, 0.1);
             }
 
-        /* Mobil Menu */
+        /* MOBİL MENÜ - GÜNCELLENDİ */
         .nav-toggle {
             display: none;
             background: var(--primary);
             color: #fff;
             border: 0;
-            padding: 10px 14px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
         }
 
         .nav-mobile {
             display: none;
+            position: absolute; /* Sayfa akışından bağımsız */
+            top: 100%; /* Header'ın hemen altı */
+            left: 0;
+            width: 100%;
             flex-direction: column;
-            gap: 8px;
-            padding: 14px 0 18px 0;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 0 0 16px 16px;
-            border: 1px solid var(--border);
-            border-top: none;
+            background: rgba(2, 6, 23, 0.98); /* Arka plan daha koyu ve opak */
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            padding: 20px;
+            z-index: 1000;
+            animation: slideDown 0.3s ease forwards;
         }
 
-            .nav-mobile a {
-                padding: 12px 16px;
-                border: 1px solid rgba(148,163,184,.25);
-                border-radius: 10px;
-                background: rgba(15,23,42,.5);
-                color: #e2e8f0;
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .nav-mobile a {
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(148,163,184,.1);
+            color: #e2e8f0;
+            text-align: left;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+            .nav-mobile a:last-child {
+                border-bottom: none;
+                margin-top: 10px;
+                text-align: center;
+                background: var(--primary);
+                color: white;
+                border-radius: 12px;
+                font-weight: 700;
+            }
+
+            .nav-mobile a:hover:not(:last-child) {
+                background: rgba(255,255,255,0.05);
+                color: var(--accent);
+                padding-left: 25px;
             }
 
         /* SECTIONS */
@@ -494,7 +529,7 @@
             margin-top: 5px;
         }
 
-        /* HİZMETLER GRID (YENİLENMİŞ) */
+        /* HİZMETLER GRID */
         .services-grid {
             display: grid;
             gap: 24px;
@@ -515,7 +550,6 @@
             overflow: hidden;
         }
 
-            /* Hizmet Kartı Hover Efekti */
             .service-card::before {
                 content: '';
                 position: absolute;
@@ -782,7 +816,7 @@
                 <a href="#yazilim">Yazılımlar</a>
                 <a href="#galeri">Galeri</a>
                 <a href="#iletisim">İletişim</a>
-                <a href="tel:+902223207853" class="btn-nav" style="text-align:center;">+90 222 320 78 53</a>
+                <a href="tel:+902223207853">+90 222 320 78 53</a>
             </div>
         </div>
     </header>
@@ -1095,6 +1129,15 @@
             const expanded = toggle.getAttribute('aria-expanded') === 'true';
             toggle.setAttribute('aria-expanded', String(!expanded));
             mobileMenu.hidden = expanded;
+
+            if (!expanded) {
+                mobileMenu.style.display = 'flex';
+            } else {
+                setTimeout(() => {
+                    if (toggle.getAttribute('aria-expanded') === 'false') mobileMenu.style.display = 'none';
+                }, 300); // Animasyon süresi kadar bekle
+                mobileMenu.style.animation = 'none'; // Kapatırken animasyon sıfırla (opsiyonel)
+            }
         });
 
         // Scroll Reveal
@@ -1202,7 +1245,7 @@
             for (let a = 0; a < particlesArray.length; a++) {
                 for (let b = a; b < particlesArray.length; b++) {
                     let distance = ((particlesArray[a].x - particlesArray[b].x) ** 2) + ((particlesArray[a].y - particlesArray[b].y) ** 2);
-                    if (distance < (canvas.width/9) * (canvas.height/9)) {
+                    if (distance < (canvas.width / 9) * (canvas.height / 9)) {
                         opacityValue = 1 - (distance / 20000);
                         ctx.strokeStyle = 'rgba(11, 103, 194,' + opacityValue + ')';
                         ctx.lineWidth = 1;
@@ -1230,8 +1273,8 @@
             init();
         });
 
-         // Galeri Kaydırma (Tuş ile)
-         const galleryTracks = document.querySelectorAll('.gallery-track');
+        // Galeri Kaydırma (Tuş ile)
+        const galleryTracks = document.querySelectorAll('.gallery-track');
         galleryTracks.forEach(track => {
             track.addEventListener('keydown', e => {
                 if (e.key === 'ArrowRight') track.scrollBy({ left: 340, behavior: 'smooth' });
