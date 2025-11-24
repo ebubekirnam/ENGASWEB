@@ -227,7 +227,7 @@
                 background: rgba(11, 103, 194, 0.1);
             }
 
-        /* MOBİL MENÜ - GÜNCELLENDİ */
+        /* MOBİL MENÜ - DÜZELTİLDİ */
         .nav-toggle {
             display: none;
             background: var(--primary);
@@ -240,26 +240,30 @@
         }
 
         .nav-mobile {
-            display: none;
-            position: absolute; /* Sayfa akışından bağımsız */
-            top: 100%; /* Header'ın hemen altı */
+            display: none; /* Varsayılan olarak GİZLİ */
+            position: absolute;
+            top: 100%;
             left: 0;
             width: 100%;
             flex-direction: column;
-            background: rgba(2, 6, 23, 0.98); /* Arka plan daha koyu ve opak */
-            backdrop-filter: blur(15px);
+            background: #020617; /* Tamamen opak arka plan */
             border-bottom: 1px solid var(--border);
-            border-top: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9);
             padding: 20px;
-            z-index: 1000;
-            animation: slideDown 0.3s ease forwards;
+            z-index: 9999; /* En üstte olması için yüksek z-index */
         }
+
+            /* Açılış Animasyonu */
+            .nav-mobile.active {
+                display: flex;
+                animation: slideDown 0.3s ease forwards;
+            }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-20px);
             }
 
             to {
@@ -269,18 +273,18 @@
         }
 
         .nav-mobile a {
-            padding: 14px 20px;
+            padding: 16px 20px;
             border-bottom: 1px solid rgba(148,163,184,.1);
             color: #e2e8f0;
             text-align: left;
             font-size: 16px;
             font-weight: 500;
-            transition: all 0.2s;
+            text-decoration: none;
         }
 
             .nav-mobile a:last-child {
                 border-bottom: none;
-                margin-top: 10px;
+                margin-top: 15px;
                 text-align: center;
                 background: var(--primary);
                 color: white;
@@ -292,6 +296,7 @@
                 background: rgba(255,255,255,0.05);
                 color: var(--accent);
                 padding-left: 25px;
+                transition: 0.2s;
             }
 
         /* SECTIONS */
@@ -773,8 +778,9 @@
             }
 
             .nav-mobile {
-                display: flex;
+                display: none;
             }
+            /* BURASI DÜZELTİLDİ: Varsayılan olarak GİZLİ */
         }
     </style>
 </head>
@@ -796,7 +802,7 @@
                         <div class="logo-text-sub">ELEKTRİK OTOMASYON & ENERJİ SİSTEMLERİ</div>
                     </div>
                 </div>
-                <button class="nav-toggle" aria-controls="ana-menu" aria-expanded="false">Menü</button>
+                <button class="nav-toggle" aria-label="Menüyü Aç">Menü</button>
                 <nav aria-label="Ana gezinme">
                     <div id="ana-menu" class="nav-links">
                         <a href="#hakkimizda">Hakkımızda</a>
@@ -810,7 +816,7 @@
                     </div>
                 </nav>
             </div>
-            <div class="nav-mobile" id="mobil-menu" hidden>
+            <div class="nav-mobile" id="mobil-menu">
                 <a href="#hakkimizda">Hakkımızda</a>
                 <a href="#hizmetler">Hizmetler</a>
                 <a href="#yazilim">Yazılımlar</a>
@@ -831,7 +837,7 @@
 
                     <h1 class="hero-title" id="hero-baslik">Doğalgaz RMS-A istasyonları ve <span class="hero-highlight">endüstriyel otomasyon </span>çözümleri.</h1>
 
-                    <p class="hero-text">EPDK yetkili mühendislik hizmetleriyle Doğalgaz RMS-A ve RMS-B istasyonlarında anahtar teslim çözümler sunuyoruz. BOTAŞ şartnamesine tam uygun, DNP3 protokolü destekli yazılımımız sayesinde Ankara SCADA Merkezi ile kesintisiz entegrasyon, Web ve Local üzerinden detaylı izleme ve raporlama sağlıyoruz.</p>
+                    <p class="hero-text">EPDK yetkili mühendislik hizmetleriyle Doğalgaz RMS-A ve RMS-B istasyonlarında anahtar teslim çözümler sunuyoruz. BOTAŞ şartnamesine tam uygun, DNP3 protokolü destekli yazılımımız sayesinde BOTAŞ SCADA Merkezi ile kesintisiz entegrasyon, Web ve Local istasyon üzerinden detaylı izleme ve raporlama sağlıyoruz.</p>
 
                     <div class="hero-actions">
                         <a href="tel:+902223207853" class="btn-primary">Bize Ulaşın</a>
@@ -1125,19 +1131,17 @@
         // Mobil Menü
         const toggle = document.querySelector('.nav-toggle');
         const mobileMenu = document.getElementById('mobil-menu');
-        toggle.addEventListener('click', () => {
-            const expanded = toggle.getAttribute('aria-expanded') === 'true';
-            toggle.setAttribute('aria-expanded', String(!expanded));
-            mobileMenu.hidden = expanded;
 
-            if (!expanded) {
-                mobileMenu.style.display = 'flex';
-            } else {
-                setTimeout(() => {
-                    if (toggle.getAttribute('aria-expanded') === 'false') mobileMenu.style.display = 'none';
-                }, 300); // Animasyon süresi kadar bekle
-                mobileMenu.style.animation = 'none'; // Kapatırken animasyon sıfırla (opsiyonel)
-            }
+        toggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Menü linklerine tıklanınca menüyü kapat
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
         });
 
         // Scroll Reveal
@@ -1272,7 +1276,7 @@
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             init();
         });
-        //asd
+
         // Galeri Kaydırma (Tuş ile)
         const galleryTracks = document.querySelectorAll('.gallery-track');
         galleryTracks.forEach(track => {
