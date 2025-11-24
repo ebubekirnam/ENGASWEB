@@ -626,7 +626,6 @@
                 border-color: var(--accent);
             }
 
-        /* GALERİ AYARLARI */
         .gallery-container {
             margin-top: 30px;
         }
@@ -845,11 +844,19 @@
             z-index: 1;
         }
 
+        /* MOBİL VE TABLET DÜZENLEMELERİ (1100px ALTI) */
         @media (max-width:1100px) {
             .hero-grid, .two-column, .contact-grid, .software-grid {
                 grid-template-columns: minmax(0,1fr);
                 gap: 40px;
             }
+
+                /* BU SATIR EKLENDİ: Tablet ve Mobilde Hero Bölümünü Ortalar */
+                .hero-grid > .reveal:first-child {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
 
             .hero-title {
                 font-size: 36px;
@@ -1145,7 +1152,7 @@
                 <h2 class="section-title">ENGAS ÖLÇÜM YAZILIMI</h2>
                 <p class="section-subtitle">Yazılımımızdan görüntüler (Büyütmek için resimlere tıklayın).</p>
                 <div class="gallery-container">
-                    <div class="gallery-label">🖥️ LOKAL İZLEME EKRANLARI</div>
+                    <div class="gallery-label">🖥️ LOCAL İZLEME EKRANLARI</div>
                     <div class="gallery-track">
                         <div class="gallery-item" onclick="openLightbox('images/local1.png')"><img src="images/local1.png" alt="Local 1" loading="lazy"></div>
                         <div class="gallery-item" onclick="openLightbox('images/local2.png')"><img src="images/local2.png" alt="Local 2" loading="lazy"></div>
@@ -1157,6 +1164,7 @@
                         <div class="gallery-item" onclick="openLightbox('images/local8.png')"><img src="images/local8.png" alt="Local 8" loading="lazy"></div>
                     </div>
                 </div>
+
                 <div class="gallery-container" style="margin-top:40px;">
                     <div class="gallery-label">🌐 WEB İZLEME PORTALI</div>
                     <div class="gallery-track">
@@ -1168,6 +1176,17 @@
                         <div class="gallery-item" onclick="openLightbox('images/web6.png')"><img src="images/web6.png" alt="Web 6" loading="lazy"></div>
                         <div class="gallery-item" onclick="openLightbox('images/web7.png')"><img src="images/web7.png" alt="Web 7" loading="lazy"></div>
                         <div class="gallery-item" onclick="openLightbox('images/web8.png')"><img src="images/web8.png" alt="Web 8" loading="lazy"></div>
+                    </div>
+                </div>
+
+                <div class="gallery-container" style="margin-top:40px;">
+                    <div class="gallery-label">🌐 ENGAS ISO6976 & AGA8 DC 92 TEST</div>
+                    <div class="gallery-track">
+                        <div class="gallery-item" onclick="openLightbox('images/iso1.png')"><img src="images/iso1.png" alt="Iso 1" loading="lazy"></div>
+                        <div class="gallery-item" onclick="openLightbox('images/iso2.png')"><img src="images/iso2.png" alt="Iso 2" loading="lazy"></div>
+                        <div class="gallery-item" onclick="openLightbox('images/iso3.png')"><img src="images/iso3.png" alt="Iso 3" loading="lazy"></div>
+                        <div class="gallery-item" onclick="openLightbox('images/iso4.png')"><img src="images/iso4.png" alt="Iso 4" loading="lazy"></div>
+
                     </div>
                 </div>
             </div>
@@ -1351,7 +1370,7 @@
             });
         });
 
-        // --- AJAX FORM GÖNDERİMİ ---
+        // --- AJAX FORM GÖNDERİMİ (SAYFA YENİLENMEDEN) ---
         const form = document.getElementById("contact-form");
         const btn = document.getElementById("submit-btn");
         const status = document.getElementById("form-status");
